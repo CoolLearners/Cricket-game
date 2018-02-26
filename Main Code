@@ -1,0 +1,204 @@
+background(0, 255, 230);
+var x;
+var y;
+var z;
+var bowlerBowl=0;
+var ballOver= 0;
+var ballSpeed=1;// not a bool
+var fastPitch= 237;
+var fastSwing= 0;
+var fastSwingPoint= 200;
+var fastCurve= -0.1;
+var ballY= 70;
+var ballType= "spin";
+var ballX= 245;
+var ballSpeedMultiplier=2;
+var pitchTime=3;
+var spinPitch= 237;
+var spinCurve= -0.1;
+var score=0;
+
+spinCurve= random(84.0/-85.1,84.0/204.9);
+println(floor(random(1,3)));
+println(spinCurve);
+//if(floor(random(1,3))===1){
+//    spinCurve=-(spinCurve);
+//}
+//else{
+    
+//}
+
+draw= function() {
+
+    //field
+    stroke(0, 0, 0);
+    fill(9, 255, 0);
+    arc(200, 80, 467, 100, -148, -31);
+    
+    //pitch
+    noStroke();
+    rect(0,55,400,344);
+    fill(222, 133, 133);
+    quad(135, 120, 265, 120, 300, 362, 100, 362);
+    
+    //bowler
+    x = 60;
+    y = -170;
+    z = 2;
+    fill(207, 25, 25);
+    arc(150+x, 250+y, 38+z, 38+z, 180, 360);
+    rectMode(CENTER);
+    rect(150+x, 264+y, 38+z, 30+z);
+    rectMode(CORNER);
+    fill(237, 134, 0);
+    ellipse(177,98,19,19);
+    y =70;
+    if (bowlerBowl===1){
+        //ballThrow();
+        }
+    else{
+        ellipse(245,70,27,27);}
+    fill(217, 161, 172);
+    
+    //lines
+    y = -12;
+    x = 92;
+    rect(106-y/4, 306+y,188+y/2,7,67);
+    quad(149+x,310+y,159+x,310+y,169+x,362,159+x,362);
+    x = 0;
+    quad(149+x,310+y,159+x,310+y,149+x,362,139+x,362);
+    rect(146,329,105,10,64);
+    
+    //other side lines
+    x = 72;
+    y = -169;
+    rect(133, 138,135,3,67);
+    quad(163+x,310+y,166+x,310+y,169+x,120,166+x,120);//quads are mirror image
+    x = 19;
+    quad(149+x,310+y,152+x,310+y,149+x,120,146+x,120);//quads are mirror image
+    rect(146,329,105,10,64);
+    
+    //wickets
+    fill(107, 12, 128);
+    rect(170,258,10,76,64);
+    rect(195,258,10,76,64);
+    rect(220,258,10,76,64);
+    rect(167,251,32,10,64);
+    rect(200,251,32,10,64);
+    fill(181, 0, 181);
+    //ball for game
+    fill(112, 219, 255);
+    y =70;
+    if(ballOver===0){
+        if(ballType==="fast"){
+            if(fastSwing=== 0){
+                //println(ballY);
+                //println(fastPitch);
+                //println(ballY>fastPitch);
+                if(ballY<fastPitch){
+                    ballY+=ballSpeed*ballSpeedMultiplier;
+                    ballX+=fastCurve*ballSpeedMultiplier;
+                    //println(ballY);
+                    //println(ballX);
+                    ellipse(ballX,ballY,15,15);
+                }
+                else if(ballY<fastPitch+2){
+                    playSound(getSound("rpg/step-heavy"));
+                    println("played");
+                    ballY+=1;
+                    ellipse(ballX,ballY,15,15);
+                }
+                else if(ballY<fastPitch+pitchTime){
+                    ballY+=ballSpeed*0.25;
+                    ballX+=fastCurve*0.25;
+                    //println(ballY);
+                    //println(ballX);
+                    ellipse(ballX,ballY,15,15);
+                    println("yo");
+                }
+                else{
+                    //println("wheee!");
+                    ballY+=ballSpeed*(ballSpeedMultiplier+2);
+                    ballX+=fastCurve*(ballSpeedMultiplier+2);
+                    //println(ballY);
+                    //println(ballX);
+                    ellipse(ballX,ballY,15,15);
+                }
+            }
+        }    
+        
+        if(ballType==="spin"){
+            
+            //println(ballY);
+            //println(fastPitch);
+            //println(ballY>fastPitch);
+            if(ballY<fastPitch){
+                ballY+=ballSpeed*ballSpeedMultiplier;
+                ballX+=spinCurve*ballSpeedMultiplier;
+                //println(ballY);
+                //println(ballX);
+                ellipse(ballX,ballY,15,15);
+            }
+            else if(ballY<fastPitch+2){
+                playSound(getSound("rpg/step-heavy"));
+                println("played");
+                ballY+=1;
+                ellipse(ballX,ballY,15,15);
+            }
+            else if(ballY<fastPitch+pitchTime){
+                ballY+=ballSpeed*0.25;
+                ballX+=fastCurve*0.25;
+                //println(ballY);
+                //println(ballX);
+                ellipse(ballX,ballY,15,15);
+                println("yo");
+            }
+
+            else{
+                //println("wheee!");
+                ballY+=ballSpeed*(ballSpeedMultiplier+2);
+                var toTheWick=((200-ballX))/84;
+                ballX+=toTheWick*(ballSpeedMultiplier+2);
+                //println(ballY);
+                //println(ballX);
+                ellipse(ballX,ballY,15,15);
+            }
+            if(mouseIsPressed&&ballY>281&&ballY<310){
+                score+=1;
+                x=-103;
+                y=-42;
+                fill(222, 215, 17);
+                   
+                quad(x+256, y+288, x+282, y+282,x+303, y+321,x+282, y+326);
+                quad(x+250, y+268, x+259, y+261, x+274, y+287, x+264, y+289);
+                
+            }            
+            text(score,54,67);
+        }
+    }
+    else if(ballOver===1){
+        spinCurve= random(84.0/-85.1,84.0/204.9);
+        println(spinCurve);
+    }
+    
+    
+    
+    //bat
+    x=-115;
+    y=-58;
+    quad(x+256, y+287, x+282, y+282,x+324, y+350,x+300, y+358);
+    quad(x+244, y+251, x+252, y+244, x+274, y+287, x+264, y+289);
+    
+    //scoreboard
+    fill(255, 255, 255);
+    rect(132,1,121,28);
+    fill(0, 0, 0);
+    text("Score:",138,19);
+    text(score,176,19);
+
+};    
+
+
+//fast yorker
+//slow yorker
+//big spin
